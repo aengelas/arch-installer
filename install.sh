@@ -238,7 +238,7 @@ if [ "${product_name}" == "XPS 15 9560" ]; then
 
   # We also need to set the following options to avoid hanging at some point
   # after boot, in improve power consumption
-  boot_options="${boot_options) nouveau.modeset=0 acpi_rev_override=1 enable_fbc=1 enable_psr=1 disable_power_well=0 pci=noaer"
+  boot_options="${boot_options} nouveau.modeset=0 acpi_rev_override=1 enable_fbc=1 enable_psr=1 disable_power_well=0 pci=noaer"
 fi
 
 # Write bootloader entries for the standard kernel.
@@ -298,10 +298,7 @@ arch-chroot /mnt chown -R "$user:" "/home/$user"
 echo "%wheel ALL=(ALL) ALL" >> /mnt/etc/sudoers
 
 # Set a random password for the root user.
-password="$(openssl rand -base64 64)"
-# For some reason the chpasswd --root /mnt form of the chpasswd command doesn't
-# work here.
-echo "root:$password" | arch-chroot /mnt chpasswd
+echo "root:$(openssl rand -base64 32)" | chpasswd --root /mnt
 
 # Copy this script into the new installation for reference
 cp "$0" /mnt/home/$user/$(basename "$0")
